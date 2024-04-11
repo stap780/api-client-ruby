@@ -287,7 +287,11 @@ class Retailcrm
     url = "#{@url}store/products"
     @params[:limit] = limit
     @params[:page] = page
-    @filter = filter.to_a.map { |x| "filter[#{x[0]}]=#{x[1]}" }.join('&')
+    #@filter = filter.to_a.map { |x| "filter[#{x[0]}]=#{x[1]}" }.join('&')
+    @filter = filter.to_a.map { |x| 
+      "filter[#{x[0]}]=#{x[1]}" if !x[0].include?('offerIds') || !x[0].include?('ids')
+      "filter[#{x[0]}][]=#{x[1]}" if x[0].include?('offerIds') || x[0].include?('ids')
+      }.join('&')
     make_request(url)
   end
 
