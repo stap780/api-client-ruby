@@ -14,7 +14,7 @@ require 'json'
 class Retailcrm
 
   def initialize(url, key)
-    @version = 3
+    @version = 5
     @url = "#{url}/api/v#{@version}/"
     @key = key
     @params = { :apiKey => @key }
@@ -272,6 +272,26 @@ class Retailcrm
     make_request(url, 'post')
   end
 
+  ##
+  # === Получение списка товаров с торговыми предложениями
+  #Фильтры filter[offerIds][], filter[offerExternalId], filter[offerXmlId] позволяют получить товары, которым принадлежат торговые предложения с заданными id, externalId, xmlId соответственно.
+  # Example:
+  #  >> Retailcrm.store_products({:offerIds => [26120], :details => 1}, 50, 2)
+  #  => {...}
+  #
+  # Arguments:
+  #   filter (Hash)
+  #   limit (Integer) (20|50|100)
+  #   page (Integer)
+  def store_products(filter = nil, limit = 20, page = 1)
+    url = "#{@url}store/products"
+    @params[:limit] = limit
+    @params[:page] = page
+    @filter = filter.to_a.map { |x| "filter[#{x[0]}]=#{x[1]}" }.join('&')
+    make_request(url)
+  end
+
+  
   ##
   # === Get purchace prices & stock balance
   #
