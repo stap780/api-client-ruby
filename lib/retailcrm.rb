@@ -47,7 +47,7 @@ class Retailcrm
   # Example:
   #  >> Retailcrm.orders_statuses([26120, 19282])
   #  => {...}
-  #
+  #   
   # Arguments:
   #   ids (Array)
   def orders_statuses(ids = [])
@@ -276,7 +276,7 @@ class Retailcrm
   # === Получение списка товаров с торговыми предложениями
   #Фильтры filter[offerIds][], filter[offerExternalId], filter[offerXmlId] позволяют получить товары, которым принадлежат торговые предложения с заданными id, externalId, xmlId соответственно.
   # Example:
-  #  >> Retailcrm.store_products({:offerIds => [26120], :details => 1}, 50, 2)
+  #  >> Retailcrm.store_products({:offerIds => [26120, 26121], :details => 1}, 50, 2)
   #  => {...}
   #
   # Arguments:
@@ -290,7 +290,7 @@ class Retailcrm
     #@filter = filter.to_a.map { |x| "filter[#{x[0]}]=#{x[1]}" }.join('&')
     @filter = filter.to_a.map { |x| 
       "filter[#{x[0]}]=#{x[1]}" if !x[0].include?('offerIds') || !x[0].include?('ids')
-      "filter[#{x[0]}][]=#{x[1]}" if x[0].include?('offerIds') || x[0].include?('ids')
+      "filter[#{x[0]}][]=#{x[1].to_s}" if x[0].include?('offerIds') || x[0].include?('ids')
       }.join('&')
     make_request(url)
   end
