@@ -290,7 +290,7 @@ class Retailcrm
     #@filter = filter.to_a.map { |x| "filter[#{x[0]}]=#{x[1]}" }.join('&')
     @filter = filter.to_a.map { |x| 
       "filter[#{x[0]}]=#{x[1]}" if !x[0].include?('offerIds') || !x[0].include?('ids')
-      "filter[#{x[0]}][]=#{x[1].to_s}" if x[0].include?('offerIds') || x[0].include?('ids')
+      "filter[#{x[0]}][]=#{x[1]}.to_s" if x[0].include?('offerIds') || x[0].include?('ids')
       }.join('&')
     make_request(url)
   end
