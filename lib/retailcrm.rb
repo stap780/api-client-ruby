@@ -274,7 +274,8 @@ class Retailcrm
 
   ##
   # === Получение списка товаров с торговыми предложениями
-  #Фильтры filter[offerIds][], filter[offerExternalId], filter[offerXmlId] позволяют получить товары, которым принадлежат торговые предложения с заданными id, externalId, xmlId соответственно.
+  # Фильтры filter[ids][], filter[offerIds][], filter[offerExternalId], filter[offerXmlId] позволяют получить товары, которым принадлежат торговые предложения  
+  # с заданными id, externalId, xmlId соответственно.
   # Example:
   #  >> Retailcrm.store_products({:offerIds => [26120, 26121], :details => 1}, 50, 2)
   #  => {...}
@@ -288,9 +289,14 @@ class Retailcrm
     @params[:limit] = limit
     @params[:page] = page
     #@filter = filter.to_a.map { |x| "filter[#{x[0]}]=#{x[1]}" }.join('&')
-    @filter = filter.to_a.map { |x| 
-      "filter[#{x[0]}]=#{x[1]}" if !x[0].include?('offerIds') || !x[0].include?('ids')
-      "filter[#{x[0]}][]=#{x[1].to_s}" if x[0].include?('offerIds') || x[0].include?('ids')
+    @filter = filter.to_a.map { |x|
+      key = x[0]
+      if !key.include?('offerIds') || !key.include?('ids')
+        "filter[#{key}]=#{x[1]}"
+      end
+      if key.include?('offerIds') || key.include?('ids')
+        x[1].map{|x| "filter[#{key}][]=#{x}"}.join('&')
+      end
       }.join('&')
     make_request(url)
   end
