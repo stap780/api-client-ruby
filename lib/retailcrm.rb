@@ -104,7 +104,7 @@ class Retailcrm
   #   order (Array)
   #   site (String)
   def orders_edit(order, site = nil)
-    id = order[:externalId]
+    id = @params[:by] != 'externalId' ? order['id'] : order[:externalId]
     url = "#{@url}orders/#{id}/edit"
     @params[:order] = order.to_json
     @params[:site] = site
